@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MedCore Hospital Management System - Login">
+    <title>Login — MedCore HMS</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="auth-page">
+    <div class="auth-container fade-in">
+        <div class="auth-card">
+            <div class="auth-title">MedCore</div>
+            <p class="auth-subtitle">Sign in to your account</p>
+            <form id="login-form">
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input type="text" class="form-control" id="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                </div>
+                <div id="login-error" style="color:var(--accent-red);font-size:0.85rem;margin-bottom:16px;display:none;"></div>
+                <button type="submit" class="btn btn-primary" style="width:100%;" id="login-btn">Sign In</button>
+            </form>
+            <div class="auth-footer">
+                Don't have an account? <a href="/register.html">Create Account</a>
+            </div>
+            <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border-glass);text-align:center;">
+                <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:8px;">Demo Credentials</p>
+                <p style="font-size:0.8rem;color:var(--text-secondary);">Admin: <strong>admin</strong> / <strong>admin123</strong></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('login-btn');
+            const errorEl = document.getElementById('login-error');
+            btn.textContent = 'Signing in...';
+            btn.disabled = true;
+            errorEl.style.display = 'none';
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({
+                        username: document.getElementById('username').value,
+                        password: document.getElementById('password').value
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    window.location.href = '/dashboard.html';
+                } else {
+                    errorEl.textContent = data.message || 'Invalid credentials';
+                    errorEl.style.display = 'block';
+                }
+            } catch (err) {
+                errorEl.textContent = 'Connection error. Please try again.';
+                errorEl.style.display = 'block';
+            }
+            btn.textContent = 'Sign In';
+            btn.disabled = false;
+        });
+    </script>
+</body>
+</html>

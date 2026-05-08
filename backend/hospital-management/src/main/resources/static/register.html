@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Register for MedCore Hospital Management System">
+    <title>Register — MedCore HMS</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="auth-page">
+    <div class="auth-container fade-in" style="max-width:520px;">
+        <div class="auth-card">
+            <div class="auth-title">Create Account</div>
+            <p class="auth-subtitle">Join MedCore Hospital Management</p>
+            <form id="register-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="fullName">Full Name</label>
+                        <input type="text" class="form-control" id="fullName" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="username">Username</label>
+                        <input type="text" class="form-control" id="username" placeholder="johndoe" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="john@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="phone">Phone</label>
+                        <input type="tel" class="form-control" id="phone" placeholder="+1234567890">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Min 6 characters" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="role">Register As</label>
+                        <select class="form-control" id="role" required onchange="toggleRoleFields()">
+                            <option value="PATIENT">Patient</option>
+                            <option value="DOCTOR">Doctor</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="patient-fields">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="dateOfBirth">Date of Birth</label>
+                            <input type="date" class="form-control" id="dateOfBirth">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="gender">Gender</label>
+                            <select class="form-control" id="gender">
+                                <option value="">Select</option>
+                                <option value="MALE">Male</option>
+                                <option value="FEMALE">Female</option>
+                                <option value="OTHER">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="bloodGroup">Blood Group</label>
+                            <select class="form-control" id="bloodGroup">
+                                <option value="">Select</option>
+                                <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+                                <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="emergencyContact">Emergency Contact</label>
+                            <input type="tel" class="form-control" id="emergencyContact" placeholder="+1234567890">
+                        </div>
+                    </div>
+                </div>
+                <div id="doctor-fields" style="display:none;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="specialization">Specialization</label>
+                            <input type="text" class="form-control" id="specialization" placeholder="Cardiology">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="department">Department</label>
+                            <input type="text" class="form-control" id="department" placeholder="Cardiology Dept">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="qualification">Qualification</label>
+                            <input type="text" class="form-control" id="qualification" placeholder="MBBS, MD">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="licenseNumber">License Number</label>
+                            <input type="text" class="form-control" id="licenseNumber" placeholder="MED12345">
+                        </div>
+                    </div>
+                </div>
+                <div id="register-error" style="color:var(--accent-red);font-size:0.85rem;margin-bottom:16px;display:none;"></div>
+                <button type="submit" class="btn btn-primary" style="width:100%;" id="register-btn">Create Account</button>
+            </form>
+            <div class="auth-footer">Already have an account? <a href="/login.html">Sign In</a></div>
+        </div>
+    </div>
+    <script>
+        function toggleRoleFields() {
+            const role = document.getElementById('role').value;
+            document.getElementById('patient-fields').style.display = role === 'PATIENT' ? 'block' : 'none';
+            document.getElementById('doctor-fields').style.display = role === 'DOCTOR' ? 'block' : 'none';
+        }
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('register-btn');
+            const errEl = document.getElementById('register-error');
+            btn.textContent = 'Creating...'; btn.disabled = true; errEl.style.display = 'none';
+            const role = document.getElementById('role').value;
+            const body = {
+                fullName: document.getElementById('fullName').value,
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                password: document.getElementById('password').value,
+                role: role
+            };
+            if (role === 'PATIENT') {
+                body.dateOfBirth = document.getElementById('dateOfBirth').value || null;
+                body.gender = document.getElementById('gender').value || null;
+                body.bloodGroup = document.getElementById('bloodGroup').value || null;
+                body.emergencyContact = document.getElementById('emergencyContact').value || null;
+            } else {
+                body.specialization = document.getElementById('specialization').value || null;
+                body.department = document.getElementById('department').value || null;
+                body.qualification = document.getElementById('qualification').value || null;
+                body.licenseNumber = document.getElementById('licenseNumber').value || null;
+            }
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                if (res.ok) { window.location.href = '/login.html'; }
+                else { errEl.textContent = data.message || 'Registration failed'; errEl.style.display = 'block'; }
+            } catch (err) { errEl.textContent = 'Connection error'; errEl.style.display = 'block'; }
+            btn.textContent = 'Create Account'; btn.disabled = false;
+        });
+    </script>
+</body>
+</html>

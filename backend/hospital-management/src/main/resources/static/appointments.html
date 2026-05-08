@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointments — MedCore HMS</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="app-layout">
+        <button class="mobile-toggle">☰</button>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header"><div class="sidebar-logo">MedCore<span>Hospital Management</span></div></div>
+            <nav class="sidebar-nav">
+                <a href="/dashboard.html" class="nav-item" data-page="dashboard.html"><span class="icon">📊</span> Dashboard</a>
+                <a href="/doctors.html" class="nav-item" data-page="doctors.html"><span class="icon">🩺</span> Doctors</a>
+                <a href="/patients.html" class="nav-item" data-page="patients.html"><span class="icon">🧑‍🤝‍🧑</span> Patients</a>
+                <a href="/appointments.html" class="nav-item" data-page="appointments.html"><span class="icon">📅</span> Appointments</a>
+                <a href="/billing.html" class="nav-item" data-page="billing.html"><span class="icon">💳</span> Billing</a>
+                <a href="/contact.html" class="nav-item" data-page="contact.html"><span class="icon">📞</span> Contact</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info"><div class="user-avatar" id="user-avatar">A</div><div><div class="user-name" id="user-display-name">User</div><div class="user-role" id="user-display-role">ADMIN</div></div></div>
+                <button class="btn btn-secondary btn-sm" onclick="logout()" style="width:100%;margin-top:12px;">🚪 Logout</button>
+            </div>
+        </aside>
+        <main class="main-content">
+            <div class="page-header">
+                <div><h1 class="page-title">Appointments</h1><p class="page-subtitle">Schedule and manage appointments</p></div>
+                <div class="header-actions"><button class="btn btn-primary btn-sm" onclick="openModal('book-modal')">+ Book Appointment</button></div>
+            </div>
+            <div class="content-area">
+                <div class="stats-grid" style="margin-bottom:24px;">
+                    <div class="stat-card"><div class="stat-icon blue">📅</div><div class="stat-value" id="appt-total">0</div><div class="stat-label">Total</div></div>
+                    <div class="stat-card"><div class="stat-icon orange">⏳</div><div class="stat-value" id="appt-scheduled">0</div><div class="stat-label">Scheduled</div></div>
+                    <div class="stat-card"><div class="stat-icon green">✅</div><div class="stat-value" id="appt-completed">0</div><div class="stat-label">Completed</div></div>
+                </div>
+                <div class="table-container slide-up">
+                    <div class="table-header">
+                        <h3 class="table-title">All Appointments</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <select class="form-control" id="status-filter" onchange="filterAppointments()" style="width:auto;padding:8px 12px;font-size:0.85rem;">
+                                <option value="">All Status</option><option value="SCHEDULED">Scheduled</option><option value="COMPLETED">Completed</option><option value="CANCELLED">Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+                    <table><thead><tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Time</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody id="appointments-table"><tr><td colspan="6"><div class="spinner"></div></td></tr></tbody></table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="book-modal">
+        <div class="modal">
+            <div class="modal-header"><h3 class="modal-title">Book Appointment</h3><button class="modal-close" onclick="closeModal('book-modal')">✕</button></div>
+            <form id="book-form">
+                <div class="form-group"><label class="form-label">Patient</label><select class="form-control" id="book-patient" required></select></div>
+                <div class="form-group"><label class="form-label">Doctor</label><select class="form-control" id="book-doctor" required></select></div>
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-control" id="book-date" required></div>
+                    <div class="form-group"><label class="form-label">Time</label><input type="time" class="form-control" id="book-time" required></div>
+                </div>
+                <div class="form-group"><label class="form-label">Reason</label><textarea class="form-control" id="book-reason" rows="3" placeholder="Reason for visit..."></textarea></div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary" onclick="closeModal('book-modal')">Cancel</button><button type="submit" class="btn btn-primary">Book</button></div>
+            </form>
+        </div>
+    </div>
+    <script src="/js/app.js"></script>
+    <script src="/js/appointments.js"></script>
+</body>
+</html>
