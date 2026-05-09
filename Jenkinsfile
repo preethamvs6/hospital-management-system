@@ -16,6 +16,8 @@ pipeline {
         stage('Build') {
             steps {
                 dir('backend/hospital-management') {
+                    sh 'java -version'
+                    sh 'mvn -version'
                     sh 'mvn clean compile -DskipTests'
                 }
             }
