@@ -16,7 +16,7 @@ pipeline {
         stage('Build') {
             steps {
                 dir('backend/hospital-management') {
-                    bat 'mvn clean compile -DskipTests'
+                    sh 'mvn clean compile -DskipTests'
                 }
             }
         }
@@ -24,7 +24,7 @@ pipeline {
         stage('Test') {
             steps {
                 dir('backend/hospital-management') {
-                    bat 'mvn test'
+                    sh 'mvn test'
                 }
             }
         }
@@ -32,7 +32,7 @@ pipeline {
         stage('Package') {
             steps {
                 dir('backend/hospital-management') {
-                    bat 'mvn package -DskipTests'
+                    sh 'mvn package -DskipTests'
                 }
             }
         }
@@ -40,16 +40,16 @@ pipeline {
         stage('Docker Build') {
             steps {
                 dir('backend/hospital-management') {
-                    bat "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
-                    bat "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest"
+                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+                    sh "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest"
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                bat 'docker-compose down || true'
-                bat 'docker-compose up -d'
+                sh 'docker-compose down || true'
+                sh 'docker-compose up -d'
             }
         }
     }
