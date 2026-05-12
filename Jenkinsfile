@@ -18,9 +18,9 @@ pipeline {
         stage('Build') {
             steps {
                 dir('backend/hospital-management') {
-                    sh "JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 /usr/lib/jvm/java-21-openjdk-amd64/bin/java -version"
-                    sh "JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 mvn -version"
-                    sh "JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 mvn clean compile -DskipTests"
+                    sh "java -version"
+                    sh "mvn -version"
+                    sh "mvn clean compile -DskipTests"
                 }
             }
         }
@@ -28,7 +28,7 @@ pipeline {
         stage('Test') {
             steps {
                 dir('backend/hospital-management') {
-                    sh "JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 mvn test -DskipTests"
+                    sh "mvn test -DskipTests"
                 }
             }
         }
@@ -36,7 +36,7 @@ pipeline {
         stage('Package') {
             steps {
                 dir('backend/hospital-management') {
-                    sh "JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 mvn package -DskipTests"
+                    sh "mvn package -DskipTests"
                 }
             }
         }
