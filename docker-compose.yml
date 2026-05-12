@@ -23,9 +23,7 @@ services:
 
   # Spring Boot Application
   app:
-    build:
-      context: ./backend/hospital-management
-      dockerfile: Dockerfile
+    image: preethamvs6/hospital-management:latest
     container_name: hospital-app
     restart: unless-stopped
     ports:
