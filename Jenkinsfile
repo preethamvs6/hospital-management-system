@@ -4,6 +4,8 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'preethamvs6/hospital-management'
         DOCKER_TAG = "${BUILD_NUMBER}"
+        JAVA_HOME = '/usr/lib/jvm/java-21-openjdk-amd64'
+        PATH = "${JAVA_HOME}/bin:${env.PATH}"
     }
 
     stages {
