@@ -4,40 +4,12 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'preethamvs6/hospital-management'
         DOCKER_TAG = "${BUILD_NUMBER}"
-        JAVA_HOME = '/usr/lib/jvm/java-21-openjdk-amd64'
-        PATH = "${JAVA_HOME}/bin:${env.PATH}"
     }
 
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
-            }
-        }
-
-        stage('Build') {
-            steps {
-                dir('backend/hospital-management') {
-                    sh "java -version"
-                    sh "mvn -version"
-                    sh "mvn clean compile -DskipTests"
-                }
-            }
-        }
-
-        stage('Test') {
-            steps {
-                dir('backend/hospital-management') {
-                    sh "mvn test -DskipTests"
-                }
-            }
-        }
-
-        stage('Package') {
-            steps {
-                dir('backend/hospital-management') {
-                    sh "mvn package -DskipTests"
-                }
             }
         }
 
@@ -62,8 +34,23 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'docker compose down || true'
-                sh 'docker compose up -d'
+                script {
+                    // Detect if using 'docker compose' or 'docker-compose'
+                    def dockerComposeCmd = sh(script: 'docker compose version > /dev/null 2>&1 && echo "docker compose" || echo "docker-compose"', returnStdout: true).trim()
+                    echo "Using command: ${dockerComposeCmd}"
+                    
+                    sh "${dockerComposeCmd} down || true"
+                    sh "${dockerComposeCmd} up -d"
+                }
+            }
+        }
+
+        stage('Health Check') {
+            steps {
+                echo 'Waiting for application to start...'
+                sleep 20
+                // Simple check if the container is running
+                sh 'docker ps | grep hospital-app'
             }
         }
     }
